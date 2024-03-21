@@ -1,16 +1,16 @@
 import {Link, useNavigate} from 'react-router-dom'
 import useAuth from '../hooks/useAuth';
 
-
 const guestNav = [
-  { to : '/', text: 'Login' },
-  { to : '/register', text: 'Register' },
+  { to : '/', text: <span className="text-white">Login</span> },
+  { to : '/register', text: <span className="text-white">Register</span> },
 ]
 
 const userNav = [
-  { to : '/', text: 'Home' },
-{ to : '/new', text: 'บัญชีของฉัน'},
-]
+  { to: '/', text: <span className="text-white">Home</span> },
+  { to: '/new', text: <span className="text-white">บัญชีของฉัน</span> },
+];
+
 
 export default function Header() {
   const {user, logout} = useAuth() 
@@ -37,7 +37,7 @@ export default function Header() {
           ))}
           { user?.id && (
             <li>
-              <Link to='#' onClick={hdlLogout}>Logout</Link>
+              <Link to='#' onClick={hdlLogout} className="text-white">Logout</Link>
             </li>
           ) }
         </ul>

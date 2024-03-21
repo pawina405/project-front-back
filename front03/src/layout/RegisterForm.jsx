@@ -1,144 +1,134 @@
-import axios from 'axios'
-import {useState} from "react";
+import axios from 'axios';
+import { useState } from "react";
 
 export default function RegisterForm() {
   const [input, setInput] = useState({
-    firstname : '',
-      lastname : '',
-      phone : '',
-      address : '',
-    username : '', 
-    password : '',
-    confirmPassword : '',
-    email : ''
-  })
+    firstname: '',
+    lastname: '',
+    phone: '',
+    address: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    email: ''
+  });
 
-  const hdlChange = e => {
-    setInput( prv => ( { ...prv, [e.target.name] : e.target.value } ) )
-  }
+  const handleChange = e => {
+    setInput(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  const hdlSubmit = async e => {
+  const handleSubmit = async e => {
     try {
-      e.preventDefault()
+      e.preventDefault();
       // validation
-      if(input.password !== input.confirmPassword) {
-        return alert('Please check confirm password')
+      if (input.password !== input.confirmPassword) {
+        return alert('Please check confirm password');
       }
-      const rs = await axios.post('http://localhost:8881/auth/register', input)
-      console.log(rs)
-      if(rs.status === 200) {
-        alert('Register Successful')
+      const response = await axios.post('http://localhost:8881/auth/register', input);
+      console.log(response);
+      if (response.status === 200) {
+        alert('Register Successful');
       }
-    }catch(err) {
-      console.log( err.message)
+    } catch (error) {
+      console.error('Registration failed:', error);
     }
-
-  }
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center p-5 border w-4/6 min-w-[500px] mx-auto rounded-2xl mt-5">
-    <div className="flex flex-col justify-center items-center text-3xl mb-5">Register Form</div>
-    <form className="flex flex-col gap-2" onSubmit={hdlSubmit}>
-      <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">firstname</span>
-          </div>
+    <div className="p-8 border rounded-lg mx-auto mt-8 max-w-md">
+      <div className="text-3xl mb-5 text-center">Register Form</div>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <label className="w-full">
+          <span className="block mb-1">First Name</span>
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="firstname"
             value={input.firstname}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
         </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">lastname</span>
-          </div>
+
+        <label className="w-full">
+          <span className="block mb-1">Last Name</span>
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="lastname"
             value={input.lastname}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
         </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">phone</span>
-          </div>
+
+        <label className="w-full">
+          <span className="block mb-1">Phone</span>
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="phone"
             value={input.phone}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
         </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">address</span>
-          </div>
+
+        <label className="w-full">
+          <span className="block mb-1">Address</span>
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="address"
             value={input.address}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
-       
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">E-mail</span>
-          </div>
+        </label>
+
+        <label className="w-full">
+          <span className="block mb-1">E-mail</span>
           <input
             type="email"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="email"
             value={input.email}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
         </label>
-        </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">username</span>
-          </div>
+
+        <label className="w-full">
+          <span className="block mb-1">Username</span>
           <input
             type="text"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="username"
             value={input.username}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
         </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">password</span>
-          </div>
+
+        <label className="w-full">
+          <span className="block mb-1">Password</span>
           <input
             type="password"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="password"
-            value={ input.password }
-            onChange={ hdlChange }
+            value={input.password}
+            onChange={handleChange}
           />
         </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">Confirm Password</span>
-          </div>
+
+        <label className="w-full">
+          <span className="block mb-1">Confirm Password</span>
           <input
             type="password"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             name="confirmPassword"
             value={input.confirmPassword}
-            onChange={ hdlChange }
+            onChange={handleChange}
           />
         </label>
-        <div className="flex gap-5 ">
-          <button type="submit" className="btn btn-outline btn-info mt-7">Submit</button>
-          <button type="reset" className="btn btn-outline btn-warning mt-7">Reset</button>
+
+        <div className="flex justify-between">
+          <button type="submit" className="btn btn-outline btn-info w-1/2">Submit</button>
+          <button type="reset" className="btn btn-outline btn-warning w-1/2">Reset</button>
         </div>
       </form>
     </div>

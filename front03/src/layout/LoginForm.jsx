@@ -1,73 +1,66 @@
-import axios from 'axios'
-import {useState} from "react";
-import useAuth from '../hooks/useAuth'
+import axios from 'axios';
+import { useState } from "react";
+import useAuth from '../hooks/useAuth';
 
 export default function LoginForm() {
-  const { setUser } = useAuth()
+  const { setUser } = useAuth();
   const [input, setInput] = useState({
-    username : '', 
-    password : ''
-  })
+    username: '',
+    password: ''
+  });
 
-  const hdlChange = e => {
-    setInput( prv => ( { ...prv, [e.target.name] : e.target.value } ) )
-  }
+  const handleChange = e => {
+    setInput(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  const hdlSubmit = async e => {
+  const handleSubmit = async e => {
     try {
-      e.preventDefault()
-      // validation
-      const rs = await axios.post('http://localhost:8881/auth/login', input)
+      e.preventDefault();
+      // ส่งคำขอเข้าสู่ระบบไปยังเซิร์ฟเวอร์
+      const rs = await axios.post('http://localhost:8881/auth/login', input);
+      // บันทึก token ใน localStorage
       console.log(rs.data.token)
-      localStorage.setItem('token', rs.data.token)
-      const rs1 = await axios.get('http://localhost:8881/auth/me', {
-        headers : { Authorization : `Bearer ${rs.data.token}` }
-      })
-      console.log(rs1.data)
-      setUser(rs1.data)
-      
-    }catch(err) {
-      console.log( err.message)
+      localStorage.setItem('token', rs.data.token);
+      // ดึงข้อมูลผู้ใช้ที่ล็อกอินและกำหนดให้กับ context
+      const userResponse = await axios.get('http://localhost:8881/auth/me', {
+        headers: { Authorization: `Bearer ${rs.data.token}` }
+      });
+      setUser(userResponse.data);
+    } catch (error) {
+      console.error('Login failed:', error);
     }
-  }
+  };
 
   return (
-<div className="p-4 border w-4/6 min-w-[600px] mx-auto rounded-2xl mt-5">
-  <div className="flex flex-col items-center">
-    <div className="text-3xl mb-5">Login</div>
-    <form className="flex flex-col  items-center gap-2" onSubmit={hdlSubmit}>
-      <label className="form-control w-full max-w-xs">
-        <div className="label">
-          <span className="label-text">username</span>
-        </div>
-        <input
-          type="text"
-          className="input input-bordered w-full max-w-xs"
-          name="username"
-          value={input.username}
-          onChange={hdlChange}
-        />
-      </label>
+    <div className="p-8 border w-full max-w-md mx-auto rounded-2xl mt-8">
+      <div className="flex flex-col items-center">
+        <div className="text-3xl mb-5">Login</div>
+        <form className="flex flex-col items-center gap-4" onSubmit={handleSubmit}>
+          <label className="w-full">
+            <span className="block mb-1">Username</span>
+            <input
+              type="text"
+              className="input input-bordered w-full"
+              name="username"
+              value={input.username}
+              onChange={handleChange}
+            />
+          </label>
 
-      <label className="form-control w-full max-w-xs">
-        <div className="label">
-          <span className="label-text">password</span>
-        </div>
-        <input
-          type="password"
-          className="input input-bordered w-full max-w-xs"
-          name="password"
-          value={input.password}
-          onChange={hdlChange}
-        />
-      </label>
+          <label className="w-full">
+            <span className="block mb-1">Password</span>
+            <input
+              type="password"
+              className="input input-bordered w-full"
+              name="password"
+              value={input.password}
+              onChange={handleChange}
+            />
+          </label>
 
-      <div className="flex gap-5">
-        <button type="submit" className="btn btn-outline btn-info mt-7">Login</button>
+          <button type="submit" className="btn btn-outline btn-info mt-6 w-full">Login</button>
+        </form>
       </div>
-    </form>
-  </div>
-</div>
-
+    </div>
   );
 }
